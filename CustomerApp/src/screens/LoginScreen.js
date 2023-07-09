@@ -17,6 +17,7 @@ import TwitterSVG from '../assets/images/misc/twitter.svg';
 
 import CustomButton from '../components/CustomButton';
 import InputField from '../components/InputField.js';
+
 import {AuthContext} from '../context/AuthContext';
 
 const LoginScreen = ({navigation}) => {
@@ -57,7 +58,7 @@ const LoginScreen = ({navigation}) => {
           }
           keyboardType="email-address"
           value={email}
-          onChangText={text => setEmail(text)}
+          onChangeText={text => setEmail(text)}
         />
 
         <InputField
@@ -70,11 +71,11 @@ const LoginScreen = ({navigation}) => {
               style={{marginRight: 5}}
             />
           }
-          inputType="password"
+          // inputType="password"
           fieldButtonLabel={'Forgot?'}
           fieldButtonFunction={() => {}}
           value={password}
-          onChangText={text => setPassword(text)}
+          onChangeText={text => setPassword(text)}
         />
 
         <CustomButton
