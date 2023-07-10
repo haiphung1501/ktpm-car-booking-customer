@@ -1,13 +1,20 @@
-import React, { useState }  from 'react';
-import { View, Image, Text, StyleSheet, Button, TouchableOpacity } from 'react-native';
+import React, {useState} from 'react';
+import {
+  View,
+  Image,
+  Text,
+  StyleSheet,
+  Button,
+  TouchableOpacity,
+} from 'react-native';
 
 // import MapView, { Marker } from 'react-native-maps'; // map
 
-import Header from '../components/header';
-import NavigationBar from '../components/navBar';
+import Header from '../components/Home/Header';
+import HomeBottomBar from '../components/Home/HomeBottomBar';
 import InputField from '../components/InputField';
 
-const HomeScreen = ({  }) => {
+const HomeScreen = ({}) => {
   const [activeTab, setActiveTab] = useState('home');
   const [destination, setDestination] = useState(null);
 
@@ -18,11 +25,11 @@ const HomeScreen = ({  }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Header/>
-      
-      <View style ={styles.body}>
-      {/* input destination */}
+    <View className="flex-1">
+      <Header />
+
+      <View className="flex-1 mt-4 mx-6">
+        {/* input destination */}
         <InputField
           label={'Destination'}
           icon={
@@ -52,22 +59,22 @@ const HomeScreen = ({  }) => {
             </View>
           </View>
         </TouchableOpacity>
-        
-        <View style={styles.boder}/>
+
+        <View style={styles.boder} />
         <TouchableOpacity>
-        <View style={styles.rowContent}>
-          <Image
-            source={require('../assets/images/recent.png')}
-            style={{marginLeft: 5, marginRight: 5, width: 25, height: 25}}
-          />
-          <View style={styles.columnContent}>
-            <Text style={styles.nameDes}>DH KT</Text>
-            <Text style={styles.address}>Nguyen Tri Phuong, Q10</Text>
+          <View style={styles.rowContent}>
+            <Image
+              source={require('../assets/images/recent.png')}
+              style={{marginLeft: 5, marginRight: 5, width: 25, height: 25}}
+            />
+            <View style={styles.columnContent}>
+              <Text style={styles.nameDes}>DH KT</Text>
+              <Text style={styles.address}>Nguyen Tri Phuong, Q10</Text>
+            </View>
           </View>
-        </View>
         </TouchableOpacity>
 
-        <View style={styles.boder}/>
+        <View style={styles.boder} />
         <TouchableOpacity>
           <View style={styles.rowContent}>
             <Image
@@ -86,17 +93,19 @@ const HomeScreen = ({  }) => {
         <TouchableOpacity>
           <View style={styles.bookingTimer}>
             <Image
-                source={require('../assets/images/driver.png')}
-                style={{marginLeft: 5, marginRight: 5, width: 30, height: 30}}
-              />
-            <Text style={{fontSize: 16, textAlign: 'center',}}>Book a car by the hour</Text>
+              source={require('../assets/images/driver.png')}
+              style={{marginLeft: 5, marginRight: 5, width: 30, height: 30}}
+            />
+            <Text style={{fontSize: 16, textAlign: 'center'}}>
+              Book a car by the hour
+            </Text>
           </View>
         </TouchableOpacity>
 
         {/* Favorite Place will be changed loop to display  */}
         <Text style={styles.title}>Favorite Place</Text>
         <View style={styles.rowContent}>
-          <TouchableOpacity style={{alignItems: 'center',}}>
+          <TouchableOpacity style={{alignItems: 'center'}}>
             <View style={styles.bgFavorite}>
               <Image
                 source={require('../assets/images/homeFav.png')}
@@ -105,7 +114,7 @@ const HomeScreen = ({  }) => {
             </View>
             <Text style={styles.label}>Home</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{alignItems: 'center',}}>
+          <TouchableOpacity style={{alignItems: 'center'}}>
             <View style={styles.bgFavorite}>
               <Image
                 source={require('../assets/images/companyFav.png')}
@@ -114,7 +123,7 @@ const HomeScreen = ({  }) => {
             </View>
             <Text style={styles.label}>Company</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{alignItems: 'center',}}>
+          <TouchableOpacity style={{alignItems: 'center'}}>
             <View style={styles.bgFavorite}>
               <Image
                 source={require('../assets/images/bookmarkFav.png')}
@@ -125,8 +134,8 @@ const HomeScreen = ({  }) => {
           </TouchableOpacity>
         </View>
       </View>
-      
-      <NavigationBar activeTab={activeTab} onChangeTab={handleChangeTab} />
+
+      <HomeBottomBar activeTab={activeTab} onChangeTab={handleChangeTab} />
     </View>
   );
 };
@@ -168,7 +177,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: 'black',
     fontWeight: 'bold',
-    marginStart: -10,
+    marginBottom: 8,
   },
   bookingTimer: {
     marginTop: 10,
