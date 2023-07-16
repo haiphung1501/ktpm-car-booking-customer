@@ -4,6 +4,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import HistoryScreen from '../screens/HistoryScreen';
 import NotificationScreen from '../screens/NotificationScreen';
 import HomeStack from './HomeStack';
+import HistoryStack from './HistoryStack';
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -38,7 +39,7 @@ const HomeBottomTab = () => {
             <MaterialIcons name="assignment" color={color} size={26} />
           ),
         }}
-        component={HistoryScreen}
+        component={HistoryStack}
       />
 
       <Tab.Screen
