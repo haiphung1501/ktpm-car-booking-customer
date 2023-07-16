@@ -91,6 +91,7 @@ export const AuthProvider = ({children}) => {
         setUserInfo(userInfo);
         setUserToken(userToken);
       }
+
       setIsLoading(false);
     } catch (e) {
       console.log(`isLogged in error ${e}`);
