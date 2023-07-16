@@ -13,9 +13,9 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import Share from 'react-native-share';
 
-import files from '../assets/filesBase64';
+import files from '../../assets/filesBase64';
 
-import {AuthContext} from '../context/AuthContext';
+import {AuthContext} from '../../context/AuthContext';
 
 const ProfileScreen = () => {
   const {isLoading, userInfo} = useContext(AuthContext);

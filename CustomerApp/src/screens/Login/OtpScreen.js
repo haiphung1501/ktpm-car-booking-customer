@@ -1,12 +1,12 @@
 import React, {useContext, useState} from 'react';
 import {SafeAreaView, ScrollView, View, Text} from 'react-native';
-import RegistrationSVG from '../assets/images/misc/registration.svg';
-import InputField from '../components/InputField.js';
+import RegistrationSVG from '../../assets/images/misc/registration.svg';
+import InputField from '../../components/InputField.js';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import CustomButton from '../components/CustomButton';
+import CustomButton from '../../components/CustomButton';
 
-import {AuthContext} from '../context/AuthContext';
+import {AuthContext} from '../../context/AuthContext';
 
 const OtpScreen = ({navigation, route}) => {
   const {email} = route.params;

@@ -1,27 +1,23 @@
-import {View, Text, ActivityIndicator} from 'react-native';
 import React, {useContext} from 'react';
+import {ActivityIndicator, View} from 'react-native';
 
 import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-import AuthStack from './AuthStack';
 import {AuthContext} from '../context/AuthContext';
-import HomeScreen from '../screens/HomeScreen';
-import ProfileScreen from '../screens/ProfileScreen';
-import EditProfileScreen from '../screens/EditProfileScreen';
-import MainTabScreen from '../screens/MainTabScreen';
-import {DrawerContent} from '../screens/DrawerContent';
+import {DrawerContent} from './DrawerContent';
 
 import {createDrawerNavigator} from '@react-navigation/drawer';
 
 const Drawer = createDrawerNavigator();
+import AuthStack from './AuthStack';
+import HomeBottomTab from './HomeBottomTab';
 
 const AppNav = () => {
   const {isLoading, userToken} = useContext(AuthContext);
 
   if (isLoading) {
     return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <View className="flex-1 items-center justify-center bg-white">
         <ActivityIndicator size={'large'} />
       </View>
     );
@@ -33,8 +29,8 @@ const AppNav = () => {
         <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
           <Drawer.Screen
             name="HomeDrawer"
-            component={MainTabScreen}
-            // options={{headerShown: false}}
+            component={HomeBottomTab}
+            options={{headerShown: false}}
           />
         </Drawer.Navigator>
       ) : (

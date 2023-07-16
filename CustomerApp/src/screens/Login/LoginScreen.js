@@ -10,15 +10,15 @@ import {
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import LoginSVG from '../assets/images/misc/login.svg';
-import GoogleSVG from '../assets/images/misc/google.svg';
-import FacebookSVG from '../assets/images/misc/facebook.svg';
-import TwitterSVG from '../assets/images/misc/twitter.svg';
+import LoginSVG from '../../assets/images/misc/login.svg';
+import GoogleSVG from '../../assets/images/misc/google.svg';
+import FacebookSVG from '../../assets/images/misc/facebook.svg';
+import TwitterSVG from '../../assets/images/misc/twitter.svg';
 
-import CustomButton from '../components/CustomButton';
-import InputField from '../components/InputField.js';
+import CustomButton from '../../components/CustomButton';
+import InputField from '../../components/InputField.js';
 
-import {AuthContext} from '../context/AuthContext';
+import {AuthContext} from '../../context/AuthContext';
 
 const LoginScreen = ({navigation}) => {
   const [email, setEmail] = useState(null);

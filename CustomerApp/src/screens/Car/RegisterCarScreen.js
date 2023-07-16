@@ -23,7 +23,7 @@ import {
 
 import ImagePicker from 'react-native-image-crop-picker';
 
-import {AuthContext} from '../context/AuthContext';
+import {AuthContext} from '../../context/AuthContext';
 
 const EditProfileScreen = () => {
   const {userInfo} = useContext(AuthContext);
@@ -94,9 +94,9 @@ const EditProfileScreen = () => {
           </Text>
         </View>
         <View style={styles.action}>
-          <FontAwesome name="user-o" color="#000" size={20} />
+          <Icon name="car-back" color="#000" size={20} />
           <TextInput
-            placeholder="First Name"
+            placeholder="Car's Brand"
             placeholderTextColor="#666666"
             autoCorrect={false}
             style={[
@@ -108,9 +108,9 @@ const EditProfileScreen = () => {
           />
         </View>
         <View style={styles.action}>
-          <FontAwesome name="user-o" color="#000" size={20} />
+          <Icon name="car-back" color="#000" size={20} />
           <TextInput
-            placeholder="Last Name"
+            placeholder="Car's Model"
             placeholderTextColor="#666666"
             autoCorrect={false}
             style={[
@@ -122,9 +122,9 @@ const EditProfileScreen = () => {
           />
         </View>
         <View style={styles.action}>
-          <Feather name="phone" color="#000" size={20} />
+          <Icon name="spray" color="#000" size={20} />
           <TextInput
-            placeholder="Phone"
+            placeholder="Color"
             placeholderTextColor="#666666"
             keyboardType="number-pad"
             autoCorrect={false}
@@ -137,9 +137,9 @@ const EditProfileScreen = () => {
           />
         </View>
         <View style={styles.action}>
-          <FontAwesome name="envelope-o" color={'#000'} size={20} />
+          <FontAwesome name="id-card" color={'#000'} size={20} />
           <TextInput
-            placeholder="Email"
+            placeholder="License Plate"
             placeholderTextColor="#666666"
             keyboardType="email-address"
             autoCorrect={false}

@@ -10,18 +10,18 @@ import {
 
 import DatePicker from 'react-native-date-picker';
 
-import InputField from '../components/InputField.js';
+import InputField from '../../components/InputField.js';
 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import RegistrationSVG from '../assets/images/misc/registration.svg';
-import GoogleSVG from '../assets/images/misc/google.svg';
-import FacebookSVG from '../assets/images/misc/facebook.svg';
-import TwitterSVG from '../assets/images/misc/twitter.svg';
-import CustomButton from '../components/CustomButton';
+import RegistrationSVG from '../../assets/images/misc/registration.svg';
+import GoogleSVG from '../../assets/images/misc/google.svg';
+import FacebookSVG from '../../assets/images/misc/facebook.svg';
+import TwitterSVG from '../../assets/images/misc/twitter.svg';
+import CustomButton from '../../components/CustomButton.js';
 
-import {AuthContext} from '../context/AuthContext';
+import {AuthContext} from '../../context/AuthContext.js';
 
 const RegisterScreen = ({navigation}) => {
   const [date, setDate] = useState(new Date());
