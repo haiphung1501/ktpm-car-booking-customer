@@ -4,6 +4,11 @@ import {ActivityIndicator, View} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 
 import {AuthContext} from '../context/AuthContext';
+import {DrawerContent} from './DrawerContent';
+
+import {createDrawerNavigator} from '@react-navigation/drawer';
+
+const Drawer = createDrawerNavigator();
 import AuthStack from './AuthStack';
 import HomeBottomTab from './HomeBottomTab';
 
@@ -20,7 +25,17 @@ const AppNav = () => {
 
   return (
     <NavigationContainer>
-      {userToken !== null ? <HomeBottomTab /> : <AuthStack />}
+      {userToken !== null ? (
+        <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
+          <Drawer.Screen
+            name="HomeDrawer"
+            component={HomeBottomTab}
+            options={{headerShown: false}}
+          />
+        </Drawer.Navigator>
+      ) : (
+        <AuthStack />
+      )}
     </NavigationContainer>
   );
 };
