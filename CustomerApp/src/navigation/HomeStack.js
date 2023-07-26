@@ -2,6 +2,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import AddAddressScreen from '../screens/Home/AddAddressScreen';
 import AddressScreen from '../screens/Home/AddressScreen';
 import HomeScreen from '../screens/Home/HomeScreen';
+import MapScreen from '../screens/Map/MapScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -26,6 +27,13 @@ const HomeStack = () => {
           title: 'Sổ địa chỉ',
         }}
         component={AddressScreen}
+      />
+      <Stack.Screen
+        name="Map"
+        options={{
+          title: 'Bản đồ',
+        }}
+        component={MapScreen}
       />
     </Stack.Navigator>
   );

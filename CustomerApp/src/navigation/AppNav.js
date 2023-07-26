@@ -26,7 +26,7 @@ const AppNav = () => {
   return (
     <NavigationContainer>
       {userToken !== null ? (
-        <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
+        <Drawer.Navigator useLegacyImplementation={false}  drawerContent={props => <DrawerContent {...props} />}>
           <Drawer.Screen
             name="HomeDrawer"
             component={HomeBottomTab}
