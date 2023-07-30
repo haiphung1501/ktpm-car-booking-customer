@@ -1,13 +1,13 @@
 import React, { useState, useRef, useEffect }  from 'react';
 
-import { View, Image, StyleSheet, TouchableOpacity, PermissionsAndroid, Keyboard} from 'react-native';
+import { View, Image, StyleSheet} from 'react-native';
 
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';  // map
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import MapViewDirections from 'react-native-maps-directions';
-import Geolocation from 'react-native-geolocation-service';
 import * as geolib from 'geolib';
 import axios from 'axios';
+import { useRoute  } from '@react-navigation/native';
 
 import CustomButton from '../../components/CustomButton';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -15,101 +15,34 @@ import {BASE_URL} from '../../config';
 // AIzaSyCCqm6B_WNT1UxOjt0InsHocTxT9QjgeAc Hai
 const GOOGLE_MAPS_APIKEY = 'AIzaSyCCqm6B_WNT1UxOjt0InsHocTxT9QjgeAc';
 
-export default function MapScreen() {
-  const [keyboardVisible, setKeyboardVisible] = useState(false);
-  const mapRef = useRef(null);
-  const InputRef = useRef(null);
-  const [latCurrent, setLatCurrent] = useState(0);
-  const [lngCurrent, setLngCurrent] = useState(0);
-  const [origin, setOrigin] = useState();
-  const [destination, setDestination] = useState();
-  const [hasFetchedCurrentLocation, setHasFetchedCurrentLocation] = useState(false);
+ MapScreen = (route) => {
+  // const mapRef = useRef(null);
+  // const route = useRoute();
+  const origin = route.route.params;
 
-  const DELTA_FACTOR = 0.00001;
+
+  // const DELTA_FACTOR = 0.00001;
 
   useEffect(() => {
-    
-    requestAccessPermission();
-    const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      () => {
-        setKeyboardVisible(true);
-      }
-    );
-  
-    const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
-      () => {
-        setKeyboardVisible(false);
-      }
-    );
-    if(!hasFetchedCurrentLocation){
-      InputRef.current.focus();
-      getCurrentLocation();
-      setHasFetchedCurrentLocation(true);
-    }
+    console.log(origin);
+    console.log(destination);
     if(origin !== undefined && destination !== undefined){
       calculateMapZoom();
     }
 
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
   }, [origin, destination]);
-
-  const requestAccessPermission = async () => {
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        {
-          title: 'Location Permission',
-          message:
-            'Using the location ',
-          buttonNeutral: 'Ask Me Later',
-          buttonNegative: 'Cancel',
-          buttonPositive: 'OK',
-        },
-      );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log('You can use the location');
-      } else {
-        console.log('Location permission denied');
-      }
-    } catch (err) {
-      console.warn(err);
-    }
-  };
-  const getCurrentLocation = () => {
-    Geolocation.getCurrentPosition(
-      (position) => {
-          console.log(position.coords);
-          let location = {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-          }
-          setLatCurrent(position.coords.latitude);
-          setLngCurrent(position.coords.longitude);
-          setOrigin(location);
-      },
-      (error) => {
-          console.log(error.code, error.message);
-      },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-    );
-  };
   
-  async function moveToLocation (latitude, longitude){
-    mapRef.current.animateToRegion(
-      {
-        latitude,
-        longitude,
-        latitudeDelta: 0.03 ,
-        longitudeDelta:0.03,
-      },
-      2000,
-    )
-  }
+  // async function moveToLocation (latitude, longitude){
+  //   mapRef.current.animateToRegion(
+  //     {
+  //       latitude,
+  //       longitude,
+  //       latitudeDelta: 0.03 ,
+  //       longitudeDelta:0.03,
+  //     },
+  //     2000,
+  //   )
+  // }
 
   const calculateMapZoom = () => {
     const distance = calculateDistance(origin, destination);
@@ -167,29 +100,16 @@ export default function MapScreen() {
       <View style={{zIndex: 1, flex: 1, flexDirection: 'column', marginTop: 10, }}>
         <View style={{flex: 1, width: "75%" , alignSelf: 'center'}}>
           <GooglePlacesAutocomplete
-            ref={InputRef}
             fetchDetails={true}
             enablePoweredByContainer={false}
             placeholder='Your location'
             
             onPress={(data, details = null) => {
-              let originCordinates = {
-                latitude: details?.geometry?.location.lat,
-                longitude: details?.geometry?.location.lng
-              };
-              setLatCurrent(originCordinates.latitude);
-              setLngCurrent(originCordinates.longitude);
-              setOrigin(originCordinates);
-              moveToLocation(originCordinates);
+              navigation.goBack();
             }}
             query={{
               key: GOOGLE_MAPS_APIKEY,
               language: 'en',
-            }}
-            styles={{
-              listView: {
-                marginTop: 170,
-                }
             }}
             onFail={error => console.log(error)}
             />
@@ -200,23 +120,13 @@ export default function MapScreen() {
             placeholder='Destination'
             enablePoweredByContainer={false}
             onPress={(data, details = null) => {
-              let destinationCordinates = {
-                latitude: details?.geometry?.location.lat,
-                longitude: details?.geometry?.location.lng
-              };
-              setDestination(destinationCordinates);
-              moveToLocation(destinationCordinates);
+              navigation.goBack();
             }}
             query={{
               key: GOOGLE_MAPS_APIKEY,
               language: 'en',
             }}
             onFail={error => console.log(error)}
-            styles={{
-              listView: {
-                marginTop: 110,
-                }
-            }}
             />
         </View>
       </View>
@@ -225,8 +135,8 @@ export default function MapScreen() {
         provider={PROVIDER_GOOGLE}
         style={styles.map}
         region={{
-          latitude: latCurrent,
-          longitude: lngCurrent,
+          latitude: origin.latitude,
+          longitude: origin.longitude,
           latitudeDelta: 0.03,
           longitudeDelta: 0.03
         }}>
@@ -240,18 +150,14 @@ export default function MapScreen() {
             strokeColor="#0F5AF2"
           /> : null}
       </MapView>
-
-      {!keyboardVisible ? 
-        <CustomButton
-          label={'Booking Car'}
-          
-          onPress={() => {
-            if(origin !== undefined && destination !== undefined){
-              bookingCar();
-            }
-          }}
-        />
-        :null}
+      <CustomButton
+        label={'Booking Car'}
+        onPress={() => {
+          if(origin !== undefined && destination !== undefined){
+            bookingCar();
+          }
+        }}
+      />
     </View>
     </SafeAreaView>
   );
@@ -266,3 +172,5 @@ const styles = StyleSheet.create({
     zIndex: 0,
   } 
 });
+
+export default MapScreen()

@@ -9,7 +9,7 @@ const PLACES = {
     {
       type: 'home',
       name: 'Home',
-      address: 'TP HCM',
+      address: 'TP HCM, 227 nguyen van cu, phuong 4, quan 5',
     },
     {
       type: 'company',
