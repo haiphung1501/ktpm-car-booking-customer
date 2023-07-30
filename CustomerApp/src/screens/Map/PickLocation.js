@@ -9,7 +9,7 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Geolocation from 'react-native-geolocation-service';
 
-const GOOGLE_MAPS_APIKEY = 'AIzaSyCCqm6B_WNT1UxOjt0InsHocTxT9QjgeAc';
+import {GOOGLE_MAPS_APIKEY} from '../../config';
 
 const RecentlyPlaces = [
   {
@@ -52,19 +52,21 @@ const PickLocation = ({navigation}) => {
 
   useEffect(() =>{
     focusDestination();
-    requestAccessPermission();
+    // requestAccessPermission();
     
     if(!hasFetchedCurrentLocation){
       getCurrentLocation();
       setHasFetchedCurrentLocation(true);
     }
-
-    console.log(origin);
-    console.log(destination);
+    handleSendLocation();
   }, [origin, destination])
 
+  const handleSendLocation = () => {
+    if(destination !== undefined){
+      navigation.navigate('Map', { origin: origin, destination: destination});
+    }
+  };
   
-
   const requestAccessPermission = async () => {
     try {
       const granted = await PermissionsAndroid.request(
@@ -118,20 +120,6 @@ const PickLocation = ({navigation}) => {
     return (<Image style={{width: 25, height: 25}} source={require('../../assets/images/desSearchIc.png')}/>)
   };
 
-
-  // const renderRow = (rowData) => {
-  //   return (
-  //     <TouchableOpacity
-  //       style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 10}}>
-  //       <Image
-  //         source={require('../../assets/images/destinationIc.png')} 
-  //         style={{ width: 20, height: 20, marginRight: 10, tintColor: "grey" }}
-  //       />
-  //       <Text style={{flexWrap: 'wrap', width: 300}}>{rowData.description}</Text>
-  //     </TouchableOpacity>
-  //   );
-  // };
-
   return (
     <SafeAreaView className="flex-1 bg-green-100  ">
       <View style={{ width: '100%' }}>
@@ -147,23 +135,16 @@ const PickLocation = ({navigation}) => {
             onPress={(data, details = null) => {
               let originCordinates = {
                 latitude: details?.geometry?.location.lat,
-                longitude: details?.geometry?.location.lng
+                longitude: details?.geometry?.location.lng,
+                name: details.formatted_address,
               };
               setOrigin(originCordinates);
-              if(destination !== undefined){
-              navigation.navigate('Map', {
-                    origin: origin,
-                    destination: destination,
-                  });
-              // navigation.navigate('Map');
-              }
             }}
             query={{
               key: GOOGLE_MAPS_APIKEY,
               language: 'en',
             }}
             styles={ggStyle}
-            // renderRow={renderRow}
           />
         </View>
 
@@ -180,21 +161,16 @@ const PickLocation = ({navigation}) => {
             onPress={(data, details = null) => {
               let destinationCordinates = {
                 latitude: details?.geometry?.location.lat,
-                longitude: details?.geometry?.location.lng
+                longitude: details?.geometry?.location.lng,
+                name: details.formatted_address,
               };
               setDestination(destinationCordinates);
-              navigation.navigate('Map', {
-                    origin: origin,
-                    destination: destination,
-                  });
-                  // navigation.navigate('Map');
             }}
             query={{
               key: GOOGLE_MAPS_APIKEY,
               language: 'en',
             }}
             styles={ggStyle}
-            // renderRow={renderRow}
           />
         </View>
 
