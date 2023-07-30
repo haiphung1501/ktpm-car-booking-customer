@@ -3,6 +3,7 @@ import AddAddressScreen from '../screens/Home/AddAddressScreen';
 import AddressScreen from '../screens/Home/AddressScreen';
 import HomeScreen from '../screens/Home/HomeScreen';
 import MapScreen from '../screens/Map/MapScreen';
+import PickLocation from '../screens/Map/PickLocation';
 
 const Stack = createNativeStackNavigator();
 
@@ -31,9 +32,16 @@ const HomeStack = () => {
       <Stack.Screen
         name="Map"
         options={{
-          title: 'Bản đồ',
+          title: "Bản đồ",
         }}
         component={MapScreen}
+      />
+      <Stack.Screen
+        name="Location"
+        options={{
+          title: 'Chọn điểm đến',
+        }}
+        component={PickLocation}
       />
     </Stack.Navigator>
   );
