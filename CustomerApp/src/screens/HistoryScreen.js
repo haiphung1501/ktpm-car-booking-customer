@@ -33,8 +33,9 @@ const HistoryScreen = ({navigation}) => {
           contentContainerStyle={{
             columnGap: 12,
           }}>
-          {FILTER_STATUS.map(status => (
+          {FILTER_STATUS.map((status, index) => (
             <Tag
+              key={index}
               title={status.label}
               active={filter === status.value}
               onClick={() => setFilter(status.value)}

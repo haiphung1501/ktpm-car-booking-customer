@@ -12,11 +12,11 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 // import MapView, { Marker } from 'react-native-maps'; // map
 
 import {Text} from 'react-native-paper';
-import Header from '../../components/Home/Header';
 import {PLACES_ICON} from '../../utils/address';
 import {classNames} from '../../utils/classNames';
 import {Driver, Recent} from '../../utils/sources';
 
+import Images from '../../utils/sources';
 const DESTINATIONS = [
   {
     name: 'DH KHTN',
@@ -63,16 +63,19 @@ const PLACES = [
 const HomeScreen = ({navigation}) => {
   // const [destination, setDestination] = useState(null);
 
-  // const handleChangeTab = () => {
-  //   // setActiveTab(tab);
-  //   // Xử lý thay đổi tab
-  //   // ...
-  // };
-
   return (
     <SafeAreaView className="flex-1 bg-green-100">
       <ScrollView className="flex-1 bg-green-100 pb-4">
-        <Header />
+        <View className="h-[200px] bg-transparent">
+          <Image
+            source={Images.BgImg}
+            className="w-full h-[200px] opacity-80 -mt-2.5"
+          />
+          <TouchableOpacity className="absolute flex flex-row flex-nowrap top-4 right-4 items-center px-4 py-2 bg-green-200 rounded-full" onPress={() => navigation.navigate("Map")}>
+            <Image source={Images.Map} className="w-[25px] h-[25px] mr-1" />
+            <Text className="text-xl font-bold">Maps</Text>
+          </TouchableOpacity>
+        </View>
         <View className="flex flex-row items-center bg-white p-4 shadow rounded-2xl mx-4">
           <MaterialIcons name="location-on" color="red" size={30} />
           <TextInput placeholder="Where to?" />

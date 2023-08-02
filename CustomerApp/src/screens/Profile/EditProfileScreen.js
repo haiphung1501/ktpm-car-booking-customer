@@ -1,27 +1,16 @@
-import React, {useState, useContext} from 'react';
+import React, {useContext} from 'react';
 import {
-  View,
-  Text,
-  TouchableOpacity,
   ImageBackground,
-  TextInput,
   StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 
-import {useTheme} from 'react-native-paper';
-
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
-
-import BottomSheet from 'reanimated-bottom-sheet';
-import {
-  useSharedValue,
-  useAnimatedStyle,
-  View as ReanimatedView,
-} from 'react-native-reanimated';
-
-import ImagePicker from 'react-native-image-crop-picker';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {AuthContext} from '../../context/AuthContext';
 

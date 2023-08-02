@@ -15,6 +15,8 @@ import HomeBottomTab from './HomeBottomTab';
 const AppNav = () => {
   const {isLoading, userToken} = useContext(AuthContext);
 
+  console.log(userToken);
+
   if (isLoading) {
     return (
       <View className="flex-1 items-center justify-center bg-white">
@@ -26,7 +28,9 @@ const AppNav = () => {
   return (
     <NavigationContainer>
       {userToken !== null ? (
-        <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
+        <Drawer.Navigator
+          useLegacyImplementation={false}
+          drawerContent={props => <DrawerContent {...props} />}>
           <Drawer.Screen
             name="HomeDrawer"
             component={HomeBottomTab}
