@@ -9,7 +9,6 @@ import {
   View,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-// import MapView, { Marker } from 'react-native-maps'; // map
 
 import {Text} from 'react-native-paper';
 import {PLACES_ICON} from '../../utils/address';
@@ -71,14 +70,10 @@ const HomeScreen = ({navigation}) => {
             source={Images.BgImg}
             className="w-full h-[200px] opacity-80 -mt-2.5"
           />
-          <TouchableOpacity className="absolute flex flex-row flex-nowrap top-4 right-4 items-center px-4 py-2 bg-green-200 rounded-full" onPress={() => navigation.navigate("Map")}>
-            <Image source={Images.Map} className="w-[25px] h-[25px] mr-1" />
-            <Text className="text-xl font-bold">Maps</Text>
-          </TouchableOpacity>
         </View>
         <View className="flex flex-row items-center bg-white p-4 shadow rounded-2xl mx-4">
           <MaterialIcons name="location-on" color="red" size={30} />
-          <TextInput placeholder="Where to?" />
+          <TextInput placeholder="Where to?" onFocus={() => navigation.navigate('Location')}/>
         </View>
         <View className="px-4 py-6 bg-white m-4 rounded-2xl">
           <Text style={styles.title}>Recently</Text>
