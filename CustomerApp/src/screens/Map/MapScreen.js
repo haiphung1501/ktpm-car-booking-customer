@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef }  from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 
 import { View, Image, StyleSheet, TouchableOpacity, Animated, PanResponder, Platform, Dimensions } from 'react-native';
 
@@ -7,7 +7,7 @@ import MapViewDirections from 'react-native-maps-directions';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import axios from 'axios';
 import * as geolib from 'geolib';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {BASE_URL, GOOGLE_MAPS_APIKEY} from '../../config';
 import { Button, Text } from 'react-native-paper';
 
@@ -21,7 +21,7 @@ BOTTOM_SHEET_MIN_HEIGHT - BOTTOM_SHEET_MAX_HEIGHT;
 const MAX_DOWNWARD_TRANSLATE_Y = 0;
 const DRAG_THRESHOLD = 50;
 
- MapScreen = ({route, navigation}) => {
+MapScreen = ({route, navigation}) => {
   const {origin, destination} = route.params;
   const originCoords = `${origin.latitude},${origin.longitude}`;
   const destinationCoords = `${destination.latitude},${destination.longitude}`;  
@@ -40,8 +40,8 @@ const DRAG_THRESHOLD = 50;
 
   const Delta = (origin, destination) => {
     const distance = geolib.getDistance(
-      { latitude: origin.latitude, longitude: origin.longitude },
-      { latitude: destination.latitude, longitude: destination.longitude }
+      {latitude: origin.latitude, longitude: origin.longitude},
+      {latitude: destination.latitude, longitude: destination.longitude},
     );
     return distance;
   };
@@ -59,10 +59,14 @@ const DRAG_THRESHOLD = 50;
     return (<Image style={{width: 50, height: 50}} source={require('../../assets/images/yourLocationIc.png')}/>)
   };
 
-  const DestinationView = () =>{
-    return (<Image style={{width: 50, height: 50}} source={require('../../assets/images/destinationIc.png')}/>)
+  const DestinationView = () => {
+    return (
+      <Image
+        style={{width: 50, height: 50}}
+        source={require('../../assets/images/destinationIc.png')}
+      />
+    );
   };
-
 
   const bookingCar = () =>{
     const dataInput = {
@@ -79,14 +83,15 @@ const DRAG_THRESHOLD = 50;
     duration: travelTime * 60,
     pickupLocation : {
         lat: origin.latitude,
-        lng: origin.longitude
-    },
-    destination: {
+        lng: origin.longitude,
+      },
+      destination: {
         lat: destination.latitude,
-        lng: destination.latitude
-    },};
+        lng: destination.latitude,
+      },
+    };
     console.log(dataInput);
-     axios
+    axios
       .post(`${BASE_URL}/booking/create`, dataInput)
       .then(res => {
         let bookingInfo = res.data.booking;
@@ -380,7 +385,7 @@ const DRAG_THRESHOLD = 50;
         </View>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -435,4 +440,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MapScreen
+export default MapScreen;
