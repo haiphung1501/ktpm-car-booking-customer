@@ -141,7 +141,7 @@ MapScreen = ({route, navigation}) => {
       let temp = (Delta(origin, destination)/1000).toFixed(1) * 15000;
       setPrice(temp);
     }
-    console.log(booking.driverId);
+
     fetchTravelTime();
     fetchDistance();
     fetchPrice();
@@ -365,8 +365,8 @@ MapScreen = ({route, navigation}) => {
                         </View>
                         <View className="bg-white border border-slate-400 rounded-lg p-3 mt-4 flex flex-row justify-between items-center">
                             <View>
-                              <Text className="text-lg font-bold">{booking.driverId.car.licensePlate}</Text>
-                              <Text className="text-lg text-black">{booking.driverId.car.brand}</Text>
+                              <Text className="text-lg font-bold">{booking.carId.licensePlate}</Text>
+                              <Text className="text-lg text-black">{booking.carId.brand}</Text>
                             </View>
                             <View className="w-8 h-8 rounded-full bg-green-600 items-center justify-center">
                               <TouchableOpacity>
