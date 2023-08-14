@@ -339,7 +339,7 @@ const ggStyle = StyleSheet.create({
     zIndex: 1000,
   },
   row: {
-    backgroundColor: '#FFF',
+    backgroundColor: '#DCFCE7',
   },
 });
 export default PickLocation;
