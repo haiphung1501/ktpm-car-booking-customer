@@ -1,8 +1,17 @@
-import {ScrollView, Text, View} from 'react-native';
+import {
+  Modal,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import ReviewInput from '../../components/Review/ReviewInput';
 import {useState} from 'react';
 import MultiSelect from 'react-native-multiple-select';
 import CustomButton from '../../components/CustomButton';
+import axios from 'axios';
+import {BASE_URL} from '../../config';
 
 const COMMENTS = [
   {
@@ -27,9 +36,29 @@ const COMMENTS = [
   },
 ];
 
-const ReviewScreen = () => {
-  const [rating, setRating] = useState();
+const ReviewScreen = ({route, navigation}) => {
+  const [rating, setRating] = useState(1);
   const [selectedItems, setSelectedItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [show, setShow] = useState(false);
+
+  const {order} = route.params;
+
+  const handleSubmit = () => {
+    setShow(true);
+    setLoading(true);
+    axios
+      .put(`${BASE_URL}/booking/review/${order._id}`, {
+        rating,
+        comment: selectedItems.map(item => COMMENTS[item].name).join(', '),
+      })
+      .then(() => {
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  };
 
   return (
     <ScrollView className="bg-white">
@@ -62,14 +91,90 @@ const ReviewScreen = () => {
             searchInputStyle={{color: '#CCC'}}
           />
           <CustomButton
+            onPress={() => handleSubmit()}
             wrapperClass="mt-6 p-4 mb-0 rounded-lg bg-green-600 flex flex-row items-center justify-center"
             textClass="text-white font-bold text-lg"
             label="Đánh giá"
           />
         </View>
       </View>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={show}
+        onRequestClose={() => {
+          setModalVisible(!show);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            {loading ? (
+              <Text style={styles.modalText}>Loading...</Text>
+            ) : (
+              <>
+                <Text
+                  style={styles.modalText}
+                  className="text-green-700 font-medium">
+                  Action successfull!
+                </Text>
+                <Pressable
+                  style={[styles.button, styles.buttonClose]}
+                  onPress={() => {
+                    setShow(!show);
+                    navigation.goBack();
+                  }}>
+                  <Text style={styles.textStyle}>Back</Text>
+                </Pressable>
+              </>
+            )}
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: '#F194FF',
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+});
 
 export default ReviewScreen;

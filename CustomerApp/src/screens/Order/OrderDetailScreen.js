@@ -1,8 +1,12 @@
 import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import CustomButton from '../../components/CustomButton';
+import {useHistoryStore} from '../../store/historyStore';
 
-const OrderDetailScreen = ({navigation}) => {
+const OrderDetailScreen = ({route, navigation}) => {
+  console.log(route.params);
+  const currentBooking = useHistoryStore.use.currentBooking();
+
   return (
     <ScrollView className="px-4 pt-4">
       <View className="bg-white rounded-lg p-3">

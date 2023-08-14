@@ -195,6 +195,7 @@ const PickLocation = ({navigation}) => {
             flexDirection: 'row',
             width: '100%',
             marginLeft: 5,
+            position: 'relative',
           }}>
           <TouchableOpacity
             style={{
