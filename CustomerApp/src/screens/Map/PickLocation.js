@@ -64,8 +64,8 @@ const PickLocation = ({navigation}) => {
   useEffect(() => {
     focusDestination();
     requestAccessPermission();
-
-    if (!hasFetchedCurrentLocation) {
+    
+    if(!hasFetchedCurrentLocation){
       getCurrentLocation();
       setHasFetchedCurrentLocation(true);
     }
@@ -109,19 +109,39 @@ const PickLocation = ({navigation}) => {
 
   const getCurrentLocation = () => {
     Geolocation.getCurrentPosition(
-      position => {
-        let location = {
+      async (position) => {
+        const location = {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
         };
-        setOrigin(location);
+
+        const response = await fetch(
+          `https://maps.googleapis.com/maps/api/geocode/json?latlng=${location.latitude},${location.longitude}&key=${GOOGLE_MAPS_APIKEY}`
+        );
+  
+        const data = await response.json();
+  
+        if (data.results.length > 0) {
+          const firstResult = data.results[0];
+          const fullAddress = firstResult.formatted_address;
+          const part = fullAddress.split(',');
+          const shortName = part[0].trim();
+          const currentLocation = {
+            latitude: location.latitude,
+            longitude: location.longitude,
+            name: shortName,
+            address: fullAddress,
+          }
+          setOrigin(currentLocation);
+        }
       },
-      error => {
+      (error) => {
         console.log(error.code, error.message);
       },
       {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
     );
   };
+  
 
   const focusDestination = () => {
     if (onFocus.current) {
@@ -176,7 +196,8 @@ const PickLocation = ({navigation}) => {
               let originCordinates = {
                 latitude: details?.geometry?.location.lat,
                 longitude: details?.geometry?.location.lng,
-                name: details.formatted_address,
+                name: details?.name,
+                address: details?.formatted_address,
               };
               setOrigin(originCordinates);
             }}
@@ -216,7 +237,8 @@ const PickLocation = ({navigation}) => {
               let destinationCordinates = {
                 latitude: details?.geometry?.location.lat,
                 longitude: details?.geometry?.location.lng,
-                name: details.formatted_address,
+                name: details?.name,
+                address: details?.formatted_address,
               };
               setDestination(destinationCordinates);
             }}
@@ -317,7 +339,7 @@ const ggStyle = StyleSheet.create({
     zIndex: 1000,
   },
   row: {
-    backgroundColor: '#FFF',
+    backgroundColor: '#DCFCE7',
   },
 });
 export default PickLocation;
