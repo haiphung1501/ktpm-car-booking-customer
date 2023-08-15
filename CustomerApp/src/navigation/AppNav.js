@@ -18,7 +18,7 @@ import ChatScreen from '../screens/Chat/ChatScreen';
 const AppNav = () => {
   const {isLoading, userToken} = useContext(AuthContext);
 
-  return <ChatScreen />;
+  // return <ChatScreen />;
 
   if (isLoading) {
     return (

@@ -7,6 +7,7 @@ import ProfileScreen from '../screens/Profile/ProfileScreen';
 import EditProfileScreen from '../screens/Profile/EditProfileScreen';
 import HomeStack from './HomeStack';
 import HistoryStack from './HistoryStack';
+import ChatScreen from '../screens/Chat/ChatScreen';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -15,6 +16,7 @@ import {View} from 'react-native-animatable';
 
 const Tab = createMaterialBottomTabNavigator();
 const ProfileStack = createNativeStackNavigator();
+const MessageStack = createNativeStackNavigator();
 
 const HomeBottomTab = () => {
   const theme = useTheme();
@@ -66,6 +68,17 @@ const HomeBottomTab = () => {
         component={ProfileStackScreen}
         options={{
           tabBarLabel: 'Profile',
+          tabBarColor: '#694fad',
+          tabBarIcon: ({color}) => (
+            <Icon name="ios-person" color={color} size={26} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="message"
+        component={MessageStackScreen}
+        options={{
+          tabBarLabel: 'Message',
           tabBarColor: '#694fad',
           tabBarIcon: ({color}) => (
             <Icon name="ios-person" color={color} size={26} />
@@ -126,5 +139,20 @@ const ProfileStackScreen = ({navigation}) => {
         component={EditProfileScreen}
       />
     </ProfileStack.Navigator>
+  );
+};
+
+const MessageStackScreen = ({navigation}) => {
+  return (
+    <MessageStack.Navigator>
+      <MessageStack.Screen
+        name="Chat"
+        component={ChatScreen}
+        options={({route}) => ({
+          title: 'Hoang Mai',
+          headerBackTitleVisible: false,
+        })}
+      />
+    </MessageStack.Navigator>
   );
 };
