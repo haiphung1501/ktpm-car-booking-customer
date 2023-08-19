@@ -13,11 +13,12 @@ import AuthStack from './AuthStack';
 import HomeBottomTab from './HomeBottomTab';
 import DashboardScreen from '../screens/Dashboard/DashboardScreen';
 import ProfileScreen from '../screens/Profile/ProfileScreen';
+import ChatScreen from '../screens/Chat/ChatScreen';
 
 const AppNav = () => {
   const {isLoading, userToken} = useContext(AuthContext);
 
-  // return <DashboardScreen />;
+  // return <ChatScreen />;
 
   if (isLoading) {
     return (
