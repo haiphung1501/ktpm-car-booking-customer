@@ -3,10 +3,13 @@ import {View, ScrollView, Text, Button, StyleSheet} from 'react-native';
 import {Bubble, GiftedChat, Send} from 'react-native-gifted-chat';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import {BASE_URL} from '../../config';
+import axios from 'axios';
 
-const ChatScreen = () => {
+const ChatScreen = ({route, navigation}) => {
   const [messages, setMessages] = useState([]);
-
+  const {idBooking} = route.params;
+  console.log(idBooking);
   useEffect(() => {
     setMessages([
       {
@@ -32,10 +35,20 @@ const ChatScreen = () => {
     ]);
   }, []);
 
-  const onSend = useCallback((messages = []) => {
-    setMessages(previousMessages =>
-      GiftedChat.append(previousMessages, messages),
-    );
+  const onSend = useCallback(messages => {
+    var dataInput = {content: messages[0].text};
+    console.log(messages[0]);
+    axios
+      .put(`${BASE_URL}/booking/msg/${idBooking}`, dataInput)
+      .then(res => {
+        setMessages(previousMessages =>
+          GiftedChat.append(previousMessages, messages),
+        );
+      })
+      .catch(e => {
+        console.log(`Send message error ${e}`);
+      })
+      .finally(() => {});
   }, []);
 
   const renderSend = props => {

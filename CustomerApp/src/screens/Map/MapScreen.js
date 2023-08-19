@@ -44,7 +44,7 @@ MapScreen = ({route, navigation}) => {
   const lastGestureDy = useRef(0);
 
   const [socket, setSocket] = useState(
-    io('http://gofast-api.onrender.com/notification'),
+    io('https://gofast-api.onrender.com/notification'),
   );
 
   const DELTA_FACTOR = 0.00001;
@@ -124,7 +124,8 @@ MapScreen = ({route, navigation}) => {
         socket.emit('createBooking', bookingInfo._id);
         // isSocketConnectedRef.current = true;
         socket.on('bookingUpdate', async updatedBooking => {
-          setBooking(updatedBooking);
+          setBooking(updatedBooking); // Todo implement zustand
+          console.log(updatedBooking);
         });
       })
       .catch(e => {
@@ -455,7 +456,9 @@ MapScreen = ({route, navigation}) => {
                   </View>
                   <View className="w-8 h-8 rounded-full bg-green-600 items-center justify-center">
                     <TouchableOpacity
-                      onPress={() => navigation.navigate('Chat')}>
+                      onPress={() =>
+                        navigation.navigate('Chat', {idBooking: booking._id})
+                      }>
                       <MaterialIcons name="chat" size={22} color="white" />
                     </TouchableOpacity>
                   </View>
