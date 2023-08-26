@@ -64,8 +64,8 @@ const PickLocation = ({navigation}) => {
   useEffect(() => {
     focusDestination();
     requestAccessPermission();
-    
-    if(!hasFetchedCurrentLocation){
+
+    if (!hasFetchedCurrentLocation) {
       getCurrentLocation();
       setHasFetchedCurrentLocation(true);
     }
@@ -109,18 +109,18 @@ const PickLocation = ({navigation}) => {
 
   const getCurrentLocation = () => {
     Geolocation.getCurrentPosition(
-      async (position) => {
+      async position => {
         const location = {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
         };
 
         const response = await fetch(
-          `https://maps.googleapis.com/maps/api/geocode/json?latlng=${location.latitude},${location.longitude}&key=${GOOGLE_MAPS_APIKEY}`
+          `https://maps.googleapis.com/maps/api/geocode/json?latlng=${location.latitude},${location.longitude}&key=${GOOGLE_MAPS_APIKEY}`,
         );
-  
+
         const data = await response.json();
-  
+
         if (data.results.length > 0) {
           const firstResult = data.results[0];
           const fullAddress = firstResult.formatted_address;
@@ -131,17 +131,16 @@ const PickLocation = ({navigation}) => {
             longitude: location.longitude,
             name: shortName,
             address: fullAddress,
-          }
+          };
           setOrigin(currentLocation);
         }
       },
-      (error) => {
+      error => {
         console.log(error.code, error.message);
       },
       {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
     );
   };
-  
 
   const focusDestination = () => {
     if (onFocus.current) {
@@ -168,155 +167,149 @@ const PickLocation = ({navigation}) => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-green-100  ">
-      <View style={{width: '100%'}}>
-        <View
+    <View className="bg-green-100 flex-1 pt-5" style={{width: '100%'}}>
+      <View
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          width: '100%',
+          marginLeft: 5,
+          marginTop: 10,
+          position: 'relative',
+          zIndex: 2,
+        }}>
+        <TouchableOpacity
           style={{
-            display: 'flex',
-            flexDirection: 'row',
-            width: '100%',
-            marginLeft: 5,
-            marginTop: 10,
+            width: '10%',
+            justifyContent: 'center',
+            alignItems: 'flex-end',
+            marginRight: 5,
           }}>
-          <TouchableOpacity
-            style={{
-              width: '10%',
-              justifyContent: 'center',
-              alignItems: 'flex-end',
-              marginRight: 5,
-            }}>
-            <YourLocationView />
-          </TouchableOpacity>
-          <GooglePlacesAutocomplete
-            placeholder="Your Location"
-            enablePoweredByContainer={false}
-            onFail={error => console.log(error)}
-            fetchDetails={true}
-            onPress={(data, details = null) => {
-              let originCordinates = {
-                latitude: details?.geometry?.location.lat,
-                longitude: details?.geometry?.location.lng,
-                name: details?.name,
-                address: details?.formatted_address,
-              };
-              setOrigin(originCordinates);
-            }}
-            query={{
-              key: GOOGLE_MAPS_APIKEY,
-              language: 'en',
-            }}
-            styles={ggStyle}
-          />
-        </View>
-
-        <View
-          style={{
-            marginTop: 5,
-            display: 'flex',
-            flexDirection: 'row',
-            width: '100%',
-            marginLeft: 5,
-          }}>
-          <TouchableOpacity
-            style={{
-              width: '10%',
-              justifyContent: 'center',
-              alignItems: 'flex-end',
-              marginRight: 7,
-              marginLeft: -2,
-            }}>
-            <DestinationView />
-          </TouchableOpacity>
-          <GooglePlacesAutocomplete
-            placeholder="Destination"
-            ref={onFocus}
-            enablePoweredByContainer={false}
-            onFail={error => console.log(error)}
-            fetchDetails={true}
-            onPress={(data, details = null) => {
-              let destinationCordinates = {
-                latitude: details?.geometry?.location.lat,
-                longitude: details?.geometry?.location.lng,
-                name: details?.name,
-                address: details?.formatted_address,
-              };
-              setDestination(destinationCordinates);
-            }}
-            query={{
-              key: GOOGLE_MAPS_APIKEY,
-              language: 'en',
-            }}
-            styles={ggStyle}
-          />
-        </View>
-
-        {/* Recently */}
-        <View className="ml-8 mt-2">
-          <Text className="font-bold w-auto text-lg mb-2">
-            Recently Visited Locations:
-          </Text>
-          <ScrollView>
-            {RecentlyPlaces.map((item, index) => (
-              <TouchableOpacity
-                key={index}
-                className={classNames(
-                  'w-80 border-b border-gray-300 mb-2 pb-2',
-                  {
-                    'border-0': index + 1 === RecentlyPlaces.length,
-                  },
-                )}>
-                <View
-                  style={{
-                    height: 50,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}>
-                  <Image source={Recent} className="mx-1 w-[25px] h-[25px]" />
-                  <View className="flex flex-col ml-5">
-                    <Text className="text-base font-bold">{item.name}</Text>
-                    <Text className="text-sm text-gray-400">
-                      {item.address}
-                    </Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-        </View>
-
-        {/* Favorite */}
-        <View className="ml-8 mt-2">
-          <Text className="font-bold w-auto text-lg mb-2">
-            Favourite Locations:
-          </Text>
-          <ScrollView>
-            {PLACES.map((item, index) => (
-              <TouchableOpacity
-                key={index}
-                className={classNames(
-                  'w-80 border-b border-gray-300 mb-2 pb-2',
-                  {
-                    'border-0': index + 1 === PLACES.length,
-                  },
-                )}>
-                <View
-                  style={{
-                    height: 50,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}>
-                  <Image
-                    source={PLACES_ICON[item.type]}
-                    className="mx-1 w-[25px] h-[25px]"
-                  />
-                  <Text className="ml-5 text-base font-bold">{item.name}</Text>
-                </View>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-        </View>
+          <YourLocationView />
+        </TouchableOpacity>
+        <GooglePlacesAutocomplete
+          placeholder="Your Location"
+          enablePoweredByContainer={false}
+          onFail={error => console.log(error)}
+          fetchDetails={true}
+          onPress={(data, details = null) => {
+            let originCordinates = {
+              latitude: details?.geometry?.location.lat,
+              longitude: details?.geometry?.location.lng,
+              name: details?.name,
+              address: details?.formatted_address,
+            };
+            setOrigin(originCordinates);
+          }}
+          query={{
+            key: GOOGLE_MAPS_APIKEY,
+            language: 'en',
+          }}
+          styles={ggStyle}
+        />
       </View>
-    </SafeAreaView>
+
+      <View
+        style={{
+          marginTop: 5,
+          display: 'flex',
+          flexDirection: 'row',
+          width: '100%',
+          marginLeft: 5,
+          position: 'relative',
+          zIndex: 1,
+        }}>
+        <TouchableOpacity
+          style={{
+            width: '10%',
+            justifyContent: 'center',
+            alignItems: 'flex-end',
+            marginRight: 7,
+            marginLeft: -2,
+          }}>
+          <DestinationView />
+        </TouchableOpacity>
+        <GooglePlacesAutocomplete
+          placeholder="Destination"
+          ref={onFocus}
+          enablePoweredByContainer={false}
+          onFail={error => console.log(error)}
+          fetchDetails={true}
+          onPress={(data, details = null) => {
+            let destinationCordinates = {
+              latitude: details?.geometry?.location.lat,
+              longitude: details?.geometry?.location.lng,
+              name: details?.name,
+              address: details?.formatted_address,
+            };
+            setDestination(destinationCordinates);
+          }}
+          query={{
+            key: GOOGLE_MAPS_APIKEY,
+            language: 'en',
+          }}
+          styles={ggStyle}
+        />
+      </View>
+
+      {/* Recently */}
+      <View className="ml-8 mt-2">
+        <Text className="font-bold w-auto text-lg mb-2">
+          Recently Visited Locations:
+        </Text>
+        <ScrollView>
+          {RecentlyPlaces.map((item, index) => (
+            <TouchableOpacity
+              key={index}
+              className={classNames('w-80 border-b border-gray-300 mb-2 pb-2', {
+                'border-0': index + 1 === RecentlyPlaces.length,
+              })}>
+              <View
+                style={{
+                  height: 50,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
+                <Image source={Recent} className="mx-1 w-[25px] h-[25px]" />
+                <View className="flex flex-col ml-5">
+                  <Text className="text-base font-bold">{item.name}</Text>
+                  <Text className="text-sm text-gray-400">{item.address}</Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </View>
+
+      {/* Favorite */}
+      <View className="ml-8 mt-2">
+        <Text className="font-bold w-auto text-lg mb-2">
+          Favourite Locations:
+        </Text>
+        <ScrollView>
+          {PLACES.map((item, index) => (
+            <TouchableOpacity
+              key={index}
+              className={classNames('w-80 border-b border-gray-300 mb-2 pb-2', {
+                'border-0': index + 1 === PLACES.length,
+              })}>
+              <View
+                style={{
+                  height: 50,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
+                <Image
+                  source={PLACES_ICON[item.type]}
+                  className="mx-1 w-[25px] h-[25px]"
+                />
+                <Text className="ml-5 text-base font-bold">{item.name}</Text>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </View>
+    </View>
   );
 };
 
@@ -337,9 +330,6 @@ const ggStyle = StyleSheet.create({
     borderRadius: 5,
     borderWidth: 0,
     zIndex: 1000,
-  },
-  row: {
-    backgroundColor: '#DCFCE7',
   },
 });
 export default PickLocation;
