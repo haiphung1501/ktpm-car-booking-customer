@@ -1,5 +1,5 @@
-import React from 'react';
-import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Image, ScrollView, StyleSheet, Text, View, Alert} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import CustomButton from '../../components/CustomButton';
@@ -15,8 +15,16 @@ const carType = {
 
 const OrderDetailScreen = ({route, navigation}) => {
   const orderId = route.params.orderId;
-  const order = useHistoryStore.use.getBooking()(orderId);
-  console.log({order});
+  const getBooking = useHistoryStore.use.getBooking();
+  const [order, setOrder] = useState(null);
+
+  useEffect(() => {
+    const focusHandler = navigation.addListener('focus', () => {
+      setOrder(getBooking(orderId));
+      console.log('???', getBooking(orderId));
+    });
+    return focusHandler;
+  }, [navigation]);
 
   const YourLocationView = () => {
     return (
@@ -35,6 +43,8 @@ const OrderDetailScreen = ({route, navigation}) => {
       />
     );
   };
+
+  if (!order) return <></>;
 
   return (
     <ScrollView className="px-4 pt-4 w-full">
@@ -67,12 +77,14 @@ const OrderDetailScreen = ({route, navigation}) => {
               source={require('../../assets/images/desSearchIc.png')}
             />
           </View>
-          <View className="flex flex-col">
-            <Text className="font-bold text-black text-base">
-              {order.driverId.displayName}
-            </Text>
-            <Text>Air Blade : 51H-33440</Text>
-          </View>
+          {order.driverId && (
+            <View className="flex flex-col">
+              <Text className="font-bold text-black text-base">
+                {order.driverId.displayName}
+              </Text>
+              <Text>Air Blade : 51H-33440</Text>
+            </View>
+          )}
         </View>
         <View className="h-[150px] bg-gray-200 w-full flex flex-row items-center justify-center">
           <MapView
@@ -144,7 +156,7 @@ const OrderDetailScreen = ({route, navigation}) => {
         </View>
       </View>
       <CustomButton
-        disabled={order.isReviewed}
+        disabled={order.isReviewed || !order.driverId}
         onPress={() => navigation.navigate('Review', {orderId})}
         wrapperClass="mt-4 py-3 mb-6 rounded-lg bg-green-600 flex flex-row items-center justify-center"
         textClass="text-white font-bold text-lg"
