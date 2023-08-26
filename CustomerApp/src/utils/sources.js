@@ -10,6 +10,9 @@ const Images = {
   HomeFav: require('../assets/images/homeFav.png'),
   CompanyFav: require('../assets/images/companyFav.png'),
   BookmarkFav: require('../assets/images/bookmarkFav.png'),
+  CarIcon: require('../assets/images/car.png'),
+  BusIcon: require('../assets/images/bus.png'),
+  MotobikeIcon: require('../assets/images/motobike.png'),
 };
 
 module.exports = Images;
