@@ -13,6 +13,7 @@ import CustomButton from '../../components/CustomButton';
 import axios from 'axios';
 import {BASE_URL} from '../../config';
 import {useHistoryStore} from '../../store/historyStore';
+import {classNames} from '../../utils/classNames';
 
 const COMMENTS = [
   {
@@ -42,6 +43,7 @@ const ReviewScreen = ({route, navigation}) => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [show, setShow] = useState(false);
+  const [error, setError] = useState(false);
 
   const {orderId} = route.params;
   const order = useHistoryStore.use.getBooking()(orderId);
@@ -60,6 +62,7 @@ const ReviewScreen = ({route, navigation}) => {
         setLoading(false);
       })
       .catch(() => {
+        setError(true);
         setLoading(false);
       });
   };
@@ -72,7 +75,7 @@ const ReviewScreen = ({route, navigation}) => {
           Trải nghiệm của bạn trong chuyến đi với
         </Text>
         <Text className="text-center text-lg text-gray-500 font-bold mb-2">
-          Tài xế Nguyễn Văn A
+          Tài xế {order.userId.displayName}
         </Text>
         <ReviewInput onRating={setRating} value={rating} />
         <View className="mx-6 mt-6">
@@ -117,14 +120,16 @@ const ReviewScreen = ({route, navigation}) => {
               <>
                 <Text
                   style={styles.modalText}
-                  className="text-green-700 font-medium">
-                  Action successfull!
+                  className={classNames('text-green-700 font-medium', {
+                    'text-red-500': error,
+                  })}>
+                  {!error ? 'Action successfull!' : 'Action failure!'}
                 </Text>
                 <Pressable
                   style={[styles.button, styles.buttonClose]}
                   onPress={() => {
                     setShow(!show);
-                    navigation.goBack();
+                    !error && navigation.goBack();
                   }}>
                   <Text style={styles.textStyle}>Back</Text>
                 </Pressable>
