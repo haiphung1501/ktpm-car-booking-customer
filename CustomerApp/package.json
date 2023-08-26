@@ -28,6 +28,7 @@
     "react-native-date-picker": "^4.2.13",
     "react-native-fusioncharts": "^5.2.1",
     "react-native-geolocation-service": "^5.3.1",
+    "react-native-gifted-chat": "^2.4.0",
     "react-native-google-places-autocomplete": "^2.5.1",
     "react-native-image-crop-picker": "^0.40.0",
     "react-native-linear-gradient": "^2.8.1",
@@ -45,7 +46,9 @@
     "react-native-svg-charts": "^5.4.0",
     "react-native-svg-transformer": "^1.0.0",
     "react-native-vector-icons": "^9.2.0",
+    "socket.io-client": "^4.7.2",
     "tailwind-merge": "^1.13.2",
+    "uuid": "^9.0.0",
     "victory-native": "^36.6.11",
     "zustand": "^4.4.1"
   },

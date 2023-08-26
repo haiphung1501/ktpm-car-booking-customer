@@ -16,21 +16,12 @@ const FILTER_STATUS = [
   {value: 'rejected', label: 'Rejected'},
 ];
 
-const ORDER = {
-  status: 'ongoing',
-  createdAt: new Date(),
-  type: 'motobike',
-  address: 'TP HCM',
-  price: 20000,
-  user: {
-    name: 'Vy',
-  },
-};
-
 const HistoryScreen = ({navigation}) => {
   const [filter, setFilter] = useState(FILTER_STATUS[0].value);
   const [loading, setLoading] = useState(true);
-  const [bookings, setBookings] = useState([]);
+
+  const bookings = useHistoryStore.use.bookings();
+  const setBookings = useHistoryStore.use.setBookings();
 
   useEffect(() => {
     setLoading(true);
@@ -71,9 +62,11 @@ const HistoryScreen = ({navigation}) => {
             <View key={booking._id} className="shadow">
               <OrderItem
                 order={booking}
-                onReview={() => navigation.navigate('Review', {order: booking})}
+                onReview={() =>
+                  navigation.navigate('Review', {orderId: booking._id})
+                }
                 onClick={() =>
-                  navigation.navigate('OrderDetail', {order: booking})
+                  navigation.navigate('OrderDetail', {orderId: booking._id})
                 }
               />
             </View>

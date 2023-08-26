@@ -12,6 +12,7 @@ import MultiSelect from 'react-native-multiple-select';
 import CustomButton from '../../components/CustomButton';
 import axios from 'axios';
 import {BASE_URL} from '../../config';
+import {useHistoryStore} from '../../store/historyStore';
 
 const COMMENTS = [
   {
@@ -42,7 +43,9 @@ const ReviewScreen = ({route, navigation}) => {
   const [loading, setLoading] = useState(true);
   const [show, setShow] = useState(false);
 
-  const {order} = route.params;
+  const {orderId} = route.params;
+  const order = useHistoryStore.use.getBooking()(orderId);
+  const reviewBooking = useHistoryStore.use.reviewBooking();
 
   const handleSubmit = () => {
     setShow(true);
@@ -53,6 +56,7 @@ const ReviewScreen = ({route, navigation}) => {
         comment: selectedItems.map(item => COMMENTS[item].name).join(', '),
       })
       .then(() => {
+        reviewBooking(order._id);
         setLoading(false);
       })
       .catch(() => {

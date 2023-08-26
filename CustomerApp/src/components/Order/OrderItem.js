@@ -1,6 +1,6 @@
 import {Image, Text, TouchableOpacity, View} from 'react-native';
-import CustomButton from '../CustomButton';
 import {BusIcon, CarIcon, MotobikeIcon} from '../../utils/sources';
+import CustomButton from '../CustomButton';
 
 const STATUS_TEXT = {
   progress: 'Chuyến đi đang diễn ra',
@@ -19,8 +19,9 @@ const ImageType = {
 };
 
 const OrderItem = ({order, onReview, onCancel, onClick}) => {
-  const {price, pickupTime, carType, bookingStatus, pickupAddress} = order;
-  console.log(order);
+  const {price, pickupTime, carType, bookingStatus, pickupAddress, isReviewed} =
+    order;
+
   return (
     <TouchableOpacity
       onPress={onClick}
@@ -56,7 +57,7 @@ const OrderItem = ({order, onReview, onCancel, onClick}) => {
               label="Huỷ"
             />
           )}
-          {bookingStatus === 'completed' && (
+          {bookingStatus === 'completed' && !isReviewed && (
             <CustomButton
               onPress={onReview}
               wrapperClass="p-2 m-0 flex-1 rounded-lg bg-white border-2 border-teal-600 flex flex-row items-center justify-center"
