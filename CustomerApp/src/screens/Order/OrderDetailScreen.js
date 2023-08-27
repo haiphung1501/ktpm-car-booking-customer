@@ -155,8 +155,11 @@ const OrderDetailScreen = ({route, navigation}) => {
           </View>
         </View>
       </View>
+
       <CustomButton
-        disabled={order.isReviewed || !order.driverId}
+        disabled={
+          order.isReviewed || !order.driverId || bookingStatus !== 'completed'
+        }
         onPress={() => navigation.navigate('Review', {orderId})}
         wrapperClass="mt-4 py-3 mb-6 rounded-lg bg-green-600 flex flex-row items-center justify-center"
         textClass="text-white font-bold text-lg"

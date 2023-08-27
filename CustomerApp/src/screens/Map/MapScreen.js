@@ -1,26 +1,25 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 
 import {
-  View,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
   Animated,
+  Dimensions,
+  Image,
   PanResponder,
   Platform,
-  Dimensions,
+  StyleSheet,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 
-import MapView, {Marker} from 'react-native-maps';
-import MapViewDirections from 'react-native-maps-directions';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import axios from 'axios';
 import * as geolib from 'geolib';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {BASE_URL, GOOGLE_MAPS_APIKEY} from '../../config';
+import MapView, {Marker} from 'react-native-maps';
+import MapViewDirections from 'react-native-maps-directions';
 import {Button, Text} from 'react-native-paper';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {BASE_URL, GOOGLE_MAPS_APIKEY} from '../../config';
 
-import io from 'socket.io-client';
+import {useBookingStore} from '../../store/bookingStore';
 
 const WINDOW_HEIGHT = Dimensions.get('window').height;
 const BOTTOM_SHEET_MAX_HEIGHT = WINDOW_HEIGHT - 220;
@@ -30,24 +29,34 @@ const MAX_UPWARD_TRANSLATE_Y =
 const MAX_DOWNWARD_TRANSLATE_Y = 0;
 const DRAG_THRESHOLD = 50;
 
-MapScreen = ({route, navigation}) => {
-  const {origin, destination} = route.params;
+MapScreen = ({navigation}) => {
+  const origin = useBookingStore.use.origin();
+  const destination = useBookingStore.use.destination();
+
   const originCoords = `${origin.latitude},${origin.longitude}`;
   const destinationCoords = `${destination.latitude},${destination.longitude}`;
   const [travelTime, setTravelTime] = useState('');
   const [distance, setDistance] = useState(0);
   const [price, setPrice] = useState(0);
-  const [booking, setBooking] = useState();
+
   const [isBottomSheetVisible, setBottomSheetVisible] = useState(false);
   const animatedValue = useRef(new Animated.Value(0)).current;
   const [selectedVehicle, setSelectedVehicle] = useState('goCar');
   const lastGestureDy = useRef(0);
 
-  const [socket, setSocket] = useState(
-    io('https://gofast-api.onrender.com/notification'),
-  );
+  const waitingDriver = useBookingStore.use.waitingDriver();
+  const booking = useBookingStore.use.booking();
+  const socket = useBookingStore.use.socket();
+  const setSocket = useBookingStore.use.setSocket();
+  const setBooking = useBookingStore.use.setBooking();
 
   const DELTA_FACTOR = 0.00001;
+
+  useEffect(() => {
+    if (!socket) {
+      setSocket();
+    }
+  }, []);
 
   const Delta = (origin, destination) => {
     const distance = geolib.getDistance(
@@ -120,13 +129,8 @@ MapScreen = ({route, navigation}) => {
       .post(`${BASE_URL}/booking/create`, dataInput)
       .then(res => {
         let bookingInfo = res.data.booking;
-        console.log(bookingInfo);
-        socket.emit('createBooking', bookingInfo._id);
-        // isSocketConnectedRef.current = true;
-        socket.on('bookingUpdate', async updatedBooking => {
-          setBooking(updatedBooking); // Todo implement zustand
-          console.log(updatedBooking);
-        });
+        console.log('bookingInfo', bookingInfo);
+        waitingDriver(bookingInfo._id);
       })
       .catch(e => {
         console.log(`Booking error ${e}`);

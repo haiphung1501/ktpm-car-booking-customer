@@ -20,6 +20,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import Geolocation from 'react-native-geolocation-service';
 
 import {GOOGLE_MAPS_APIKEY} from '../../config';
+import {useBookingStore} from '../../store/bookingStore';
 
 const RecentlyPlaces = [
   {
@@ -56,8 +57,11 @@ const PLACES = [
 
 const PickLocation = ({navigation}) => {
   const onFocus = useRef();
-  const [origin, setOrigin] = useState();
-  const [destination, setDestination] = useState();
+
+  const origin = useBookingStore.use.origin();
+  const destination = useBookingStore.use.destination();
+  const setLocation = useBookingStore.use.setLocation();
+
   const [hasFetchedCurrentLocation, setHasFetchedCurrentLocation] =
     useState(false);
 
@@ -73,8 +77,8 @@ const PickLocation = ({navigation}) => {
   }, [origin, destination]);
 
   const handleSendLocation = () => {
-    if (destination !== undefined) {
-      navigation.navigate('Map', {origin: origin, destination: destination});
+    if (destination && origin) {
+      navigation.navigate('Map');
     }
   };
 
@@ -132,7 +136,7 @@ const PickLocation = ({navigation}) => {
             name: shortName,
             address: fullAddress,
           };
-          setOrigin(currentLocation);
+          setLocation({origin: currentLocation, destination});
         }
       },
       error => {
@@ -199,7 +203,7 @@ const PickLocation = ({navigation}) => {
               name: details?.name,
               address: details?.formatted_address,
             };
-            setOrigin(originCordinates);
+            setLocation({origin: originCordinates, destination});
           }}
           query={{
             key: GOOGLE_MAPS_APIKEY,
@@ -242,7 +246,8 @@ const PickLocation = ({navigation}) => {
               name: details?.name,
               address: details?.formatted_address,
             };
-            setDestination(destinationCordinates);
+
+            setLocation({origin, destination: destinationCordinates});
           }}
           query={{
             key: GOOGLE_MAPS_APIKEY,
