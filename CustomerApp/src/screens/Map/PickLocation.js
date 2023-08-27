@@ -246,7 +246,7 @@ const PickLocation = ({navigation}) => {
               name: details?.name,
               address: details?.formatted_address,
             };
-
+            // console.log('destination test: ', destinationCordinates);
             setLocation({origin, destination: destinationCordinates});
           }}
           query={{
