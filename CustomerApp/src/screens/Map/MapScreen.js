@@ -121,7 +121,7 @@ MapScreen = ({navigation}) => {
       },
       destination: {
         lat: destination.latitude,
-        lng: destination.latitude,
+        lng: destination.longitude,
       },
     };
     console.log(dataInput);
