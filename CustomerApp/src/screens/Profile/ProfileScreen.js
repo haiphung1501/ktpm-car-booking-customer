@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {View, SafeAreaView, StyleSheet} from 'react-native';
+import {View, SafeAreaView, StyleSheet, Linking} from 'react-native';
 import {
   Avatar,
   Title,
@@ -16,6 +16,7 @@ import Share from 'react-native-share';
 import files from '../../assets/filesBase64';
 
 import {AuthContext} from '../../context/AuthContext';
+import Communications from 'react-native-communications';
 
 const ProfileScreen = () => {
   const {isLoading, userInfo} = useContext(AuthContext);
@@ -24,8 +25,8 @@ const ProfileScreen = () => {
     const shareOptions = {
       message:
         "Order your next meal from FoodFinder App. I've already ordered more than 10 meals on it.",
-      url: files.appLogo,
-      urls: [files.image1, files.image2],
+      // url: files.appLogo,
+      // urls: [files.image1, files.image2],
     };
 
     try {
@@ -34,6 +35,12 @@ const ProfileScreen = () => {
     } catch (error) {
       console.log('Error => ', error);
     }
+  };
+
+  const handleCall = () => {
+    const phoneNumber = '0918072617';
+    // Communications.phonecall(phoneNumber, true);
+    Linking.openURL(`tel:${phoneNumber}`);
   };
 
   return (
@@ -118,7 +125,7 @@ const ProfileScreen = () => {
             <Text style={styles.menuItemText}>Tell Your Friends</Text>
           </View>
         </TouchableRipple>
-        <TouchableRipple onPress={() => {}}>
+        <TouchableRipple onPress={handleCall}>
           <View style={styles.menuItem}>
             <Icon name="account-check-outline" color="#FF6347" size={25} />
             <Text style={styles.menuItemText}>Support</Text>
