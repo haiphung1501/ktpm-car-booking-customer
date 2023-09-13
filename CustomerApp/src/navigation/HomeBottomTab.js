@@ -50,7 +50,7 @@ const HomeBottomTab = () => {
         component={HistoryStack}
       />
 
-      <Tab.Screen
+      {/* <Tab.Screen
         name="notification"
         options={{
           tabBarLabel: 'Thông báo',
@@ -59,7 +59,7 @@ const HomeBottomTab = () => {
           ),
         }}
         component={NotificationScreen}
-      />
+      /> */}
 
       <Tab.Screen
         name="profile"

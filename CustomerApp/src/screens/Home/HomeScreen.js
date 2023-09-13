@@ -34,12 +34,12 @@ const DESTINATIONS = [
 const PLACES = [
   {
     type: 'home',
-    name: 'Home',
+    name: 'Nhà',
     address: 'TP HCM',
   },
   {
     type: 'company',
-    name: 'Company',
+    name: 'Công ty',
     address: 'TP HCM',
   },
   {
@@ -73,10 +73,10 @@ const HomeScreen = ({navigation}) => {
         </View>
         <View className="flex flex-row items-center bg-white p-4 shadow rounded-2xl mx-4">
           <MaterialIcons name="location-on" color="red" size={30} />
-          <TextInput placeholder="Where to?" onFocus={() => navigation.navigate('Location')}/>
+          <TextInput placeholder="Bạn muốn đến?" onFocus={() => navigation.navigate('Location')}/>
         </View>
         <View className="px-4 py-6 bg-white m-4 rounded-2xl">
-          <Text style={styles.title}>Recently</Text>
+          <Text style={styles.title}>Gần đây</Text>
           {DESTINATIONS.map((item, index) => (
             <TouchableOpacity
               key={index}
@@ -93,17 +93,17 @@ const HomeScreen = ({navigation}) => {
             </TouchableOpacity>
           ))}
 
-          <Text style={styles.title}>Booking timer</Text>
+          <Text style={styles.title}>Hẹn giờ đặt xe</Text>
           <TouchableOpacity>
             <View className="mb-4 rounded-lg h-20 justify-start items-center p-3 bg-green-300">
               <Image source={Driver} className="mx-1 w-[30px] h-[30px]" />
               <Text className="text-base font-bold">
-                Book a car by the hour
+                Đặt xe cho chuyến đi vào giờ bạn muốn
               </Text>
             </View>
           </TouchableOpacity>
           <View className="flex flex-row justify-between items-center">
-            <Text style={styles.title}>Favorite Place</Text>
+            <Text style={styles.title}>Địa điểm của bạn</Text>
             <TouchableOpacity
               onPress={() => navigation.navigate('Address')}
               className="w-8 h-8 flex items-center justify-center bg-[#ADD9B2] rounded-full">
@@ -131,7 +131,7 @@ const HomeScreen = ({navigation}) => {
                 <View className="w-14 h-14 rounded-full flex items-center justify-center border-2 border-[#ADD9B2]">
                   <MaterialIcons name="add" size={40} color="#ADD9B2" />
                 </View>
-                <Text style={styles.label}>New</Text>
+                <Text style={styles.label}>Thêm</Text>
               </TouchableOpacity>
             </View>
           </ScrollView>

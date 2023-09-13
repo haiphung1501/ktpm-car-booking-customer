@@ -5,6 +5,7 @@ import HomeScreen from '../screens/Home/HomeScreen';
 import MapScreen from '../screens/Map/MapScreen';
 import PickLocation from '../screens/Map/PickLocation';
 import ChatScreen from '../screens/Chat/ChatScreen';
+import ReviewScreen from '../screens/Order/ReviewScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -50,6 +51,13 @@ const HomeStack = () => {
           title: 'Message',
         }}
         component={ChatScreen}
+      />
+      <Stack.Screen
+        name="Review"
+        options={{
+          title: 'Đánh giá',
+        }}
+        component={ReviewScreen}
       />
     </Stack.Navigator>
   );

@@ -46,7 +46,7 @@ const OrderItem = ({order, onReview, onCancel, onClick}) => {
         <Text className="text-lg font-medium">{pickupAddress?.name}</Text>
 
         <Text className="text-teal-600 text-xl font-bold mb-2">
-          {price} VND
+          {price.toLocaleString('en-US')} VND
         </Text>
         <View className="flex flex-row items-center ml-1">
           {bookingStatus === 'pending' && (

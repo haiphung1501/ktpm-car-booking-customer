@@ -40,12 +40,12 @@ const RecentlyPlaces = [
 const PLACES = [
   {
     type: 'home',
-    name: 'Home',
+    name: 'Nhà',
     address: 'TP HCM',
   },
   {
     type: 'company',
-    name: 'Company',
+    name: 'Công ty',
     address: 'TP HCM',
   },
   {
@@ -192,7 +192,7 @@ const PickLocation = ({navigation}) => {
           <YourLocationView />
         </TouchableOpacity>
         <GooglePlacesAutocomplete
-          placeholder="Your Location"
+          placeholder="Vị trí của bạn"
           enablePoweredByContainer={false}
           onFail={error => console.log(error)}
           fetchDetails={true}
@@ -234,7 +234,7 @@ const PickLocation = ({navigation}) => {
           <DestinationView />
         </TouchableOpacity>
         <GooglePlacesAutocomplete
-          placeholder="Destination"
+          placeholder="Điểm đến"
           ref={onFocus}
           enablePoweredByContainer={false}
           onFail={error => console.log(error)}
@@ -260,7 +260,7 @@ const PickLocation = ({navigation}) => {
       {/* Recently */}
       <View className="ml-8 mt-2">
         <Text className="font-bold w-auto text-lg mb-2">
-          Recently Visited Locations:
+          Gần đây:
         </Text>
         <ScrollView>
           {RecentlyPlaces.map((item, index) => (
@@ -289,7 +289,7 @@ const PickLocation = ({navigation}) => {
       {/* Favorite */}
       <View className="ml-8 mt-2">
         <Text className="font-bold w-auto text-lg mb-2">
-          Favourite Locations:
+          Địa điểm yêu thích:
         </Text>
         <ScrollView>
           {PLACES.map((item, index) => (

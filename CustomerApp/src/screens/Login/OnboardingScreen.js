@@ -20,7 +20,7 @@ const OnboardingScreen = ({navigation}) => {
             fontSize: 30,
             color: '#20315f',
           }}>
-          TRAVEL
+          GOFAST
         </Text>
       </View>
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -48,7 +48,7 @@ const OnboardingScreen = ({navigation}) => {
             textAlign: 'center',
             fontWeight: 'bold',
           }}>
-          Let's Begin
+          Hãy bắt đầu
         </Text>
         <MaterialIcons name="arrow-forward-ios" size={22} color="#fff" />
       </TouchableOpacity>
