@@ -138,7 +138,7 @@ const RegisterScreen = ({navigation}) => {
               style={{marginRight: 5}}
             />
           }
-          // inputType="password"
+          inputType="password"
           value={password}
           onChangeText={text => setPassword(text)}
         />

@@ -8,12 +8,12 @@ const PLACES = {
   favourites: [
     {
       type: 'home',
-      name: 'Home',
+      name: 'Nhà',
       address: 'TP HCM, 227 nguyen van cu, phuong 4, quan 5',
     },
     {
       type: 'company',
-      name: 'Company',
+      name: 'Công ty',
       address: 'TP HCM',
     },
   ],
@@ -42,7 +42,7 @@ const AddressScreen = ({navigation}) => {
   return (
     <View className="flex-1 bg-white">
       <ScrollView className="p-4">
-        <Text className="font-bold text-lg mb-3">Favorites {open}</Text>
+        <Text className="font-bold text-lg mb-3">Yêu thích</Text>
         <View className="flex flex-col gap-4">
           {PLACES.favourites.map((item, index) => (
             <View key={index}>

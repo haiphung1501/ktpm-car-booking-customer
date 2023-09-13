@@ -97,7 +97,7 @@ const ProfileScreen = () => {
               borderRightWidth: 1,
             },
           ]}>
-          <Title>140.50</Title>
+          <Title>4.0</Title>
           <Caption>Points</Caption>
         </View>
         <View style={styles.infoBox}>
@@ -107,12 +107,6 @@ const ProfileScreen = () => {
       </View>
 
       <View style={styles.menuWrapper}>
-        <TouchableRipple onPress={() => {}}>
-          <View style={styles.menuItem}>
-            <Icon name="heart-outline" color="#FF6347" size={25} />
-            <Text style={styles.menuItemText}>Your Favorites</Text>
-          </View>
-        </TouchableRipple>
         <TouchableRipple onPress={() => {}}>
           <View style={styles.menuItem}>
             <Icon name="credit-card" color="#FF6347" size={25} />
@@ -129,12 +123,6 @@ const ProfileScreen = () => {
           <View style={styles.menuItem}>
             <Icon name="account-check-outline" color="#FF6347" size={25} />
             <Text style={styles.menuItemText}>Support</Text>
-          </View>
-        </TouchableRipple>
-        <TouchableRipple onPress={() => {}}>
-          <View style={styles.menuItem}>
-            <Ionicons name="settings-outline" color="#FF6347" size={25} />
-            <Text style={styles.menuItemText}>Settings</Text>
           </View>
         </TouchableRipple>
       </View>

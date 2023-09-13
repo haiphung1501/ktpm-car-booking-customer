@@ -20,9 +20,10 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {BASE_URL, GOOGLE_MAPS_APIKEY} from '../../config';
 
 import {useBookingStore} from '../../store/bookingStore';
+import { classNames } from '../../utils/classNames';
 
 const WINDOW_HEIGHT = Dimensions.get('window').height;
-const BOTTOM_SHEET_MAX_HEIGHT = WINDOW_HEIGHT - 220;
+const BOTTOM_SHEET_MAX_HEIGHT = WINDOW_HEIGHT * 0.8;
 const BOTTOM_SHEET_MIN_HEIGHT = WINDOW_HEIGHT * 0.2;
 const MAX_UPWARD_TRANSLATE_Y =
   BOTTOM_SHEET_MIN_HEIGHT - BOTTOM_SHEET_MAX_HEIGHT;
@@ -49,21 +50,78 @@ MapScreen = ({navigation}) => {
   const socket = useBookingStore.use.socket();
   const setSocket = useBookingStore.use.setSocket();
   const setBooking = useBookingStore.use.setBooking();
+  const setLocation = useBookingStore.use.setLocation();
+  const setCancelBooking = useBookingStore.use.cancelBooking();
 
   const DELTA_FACTOR = 0.00001;
 
   useEffect(() => {
+    if(booking && booking.bookingStatus === 'completed'){
+      setBooking(null);
+      setLocation({origin: null, destination: null});
+      navigation.navigate('Home');
+    }
+
+    const fetchTravelTime = async () => {
+      try {
+        const response = await axios.get(
+          `https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&origins=${originCoords}&destinations=${destinationCoords}&key=${GOOGLE_MAPS_APIKEY}`,
+        );
+        const durationText = response.data.rows[0].elements[0].duration.text;
+        let res = parseInt(durationText);
+        setTravelTime(res);
+      } catch (error) {
+        console.error('Error fetching travel time:', error);
+      }
+    };
+
+    const fetchDistance = () => {
+      let temp = Delta(origin, destination);
+      setDistance(temp);
+    };
+
+    const fetchPrice = () => {
+      if(price === 0) {
+        let temp = (Delta(origin, destination) / 1000).toFixed(1) * 20000;
+        console.log(Delta(origin, destination) / 1000);
+        console.log("Price1: ", temp);
+
+        if(origin.address.includes("Quận 5") || origin.address.includes("Quận 1,") || origin.address.includes("Quận 3") || destination.address.includes("Quận 5") || destination.address.includes("Quận 1,") || destination.address.includes("Quận 3")){
+          temp = Math.floor((temp + temp * 0.1) / 1000) * 1000; 
+          console.log('Price2: ', temp);
+          console.log("Origin: ", origin.address);
+          console.log("Destination: ", destination.address);
+        }
+        
+        console.log('Price3: ', temp);
+        setPrice(temp);
+      }
+    };
+
+    fetchTravelTime();
+    fetchDistance();
+    fetchPrice();
+ 
     if (!socket) {
       setSocket();
     }
-  }, []);
+  }, [booking]);
 
   const Delta = (origin, destination) => {
-    const distance = geolib.getDistance(
-      {latitude: origin.latitude, longitude: origin.longitude},
-      {latitude: destination.latitude, longitude: destination.longitude},
-    );
-    return distance;
+    if(booking){
+      let distance = geolib.getDistance(
+        {latitude: booking.driverLocation.lat, longitude: booking.driverLocation.lng},
+        {latitude: destination.latitude, longitude: destination.longitude},
+      );
+      return distance;
+    }
+    else{
+      let distance = geolib.getDistance(
+        {latitude: origin.latitude, longitude: origin.longitude},
+        {latitude: destination.latitude, longitude: destination.longitude},
+      );
+      return distance;
+    }
   };
 
   const YourLocationViewIc = () => {
@@ -93,6 +151,15 @@ MapScreen = ({navigation}) => {
     );
   };
 
+  const CarIcon = () => {
+    return (
+      <Image
+        style={{width: 50, height: 50}}
+        source={require('../../assets/images/carIc.png')}
+      />
+    );
+  };
+
   const DestinationView = () => {
     return (
       <Image
@@ -113,7 +180,7 @@ MapScreen = ({navigation}) => {
         fullAddress: destination.address,
       },
       distance: Delta(origin, destination),
-      price: (Delta(origin, destination) / 1000).toFixed(1) * 15000,
+      price: price,
       duration: travelTime * 60,
       pickupLocation: {
         lat: origin.latitude,
@@ -137,6 +204,20 @@ MapScreen = ({navigation}) => {
       });
   };
 
+  const cancelBooking = bookingId => {
+    axios
+      .put(`${BASE_URL}/booking/cancel/${bookingId}`)
+      .then(res => {
+        let bookingInfo = res.data.booking;
+        console.log(bookingInfo);
+        setCancelBooking(bookingId);
+        navigation.navigate('Home');
+      })
+      .catch(e => {
+        console.log(`Booking error ${e}`);
+      });
+  };
+
   const toggleBottomSheet = () => {
     bookingCar();
     setTimeout(() => {
@@ -147,35 +228,6 @@ MapScreen = ({navigation}) => {
       }).start();
     }, 3000);
   };
-
-  useEffect(() => {
-    const fetchTravelTime = async () => {
-      try {
-        const response = await axios.get(
-          `https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&origins=${originCoords}&destinations=${destinationCoords}&key=${GOOGLE_MAPS_APIKEY}`,
-        );
-        const durationText = response.data.rows[0].elements[0].duration.text;
-        let res = parseInt(durationText);
-        setTravelTime(res);
-      } catch (error) {
-        console.error('Error fetching travel time:', error);
-      }
-    };
-
-    const fetchDistance = () => {
-      let temp = Delta(origin, destination);
-      setDistance(temp);
-    };
-
-    const fetchPrice = () => {
-      let temp = (Delta(origin, destination) / 1000).toFixed(1) * 15000;
-      setPrice(temp);
-    };
-
-    fetchTravelTime();
-    fetchDistance();
-    fetchPrice();
-  }, []);
 
   const buttonOpacity = animatedValue.interpolate({
     inputRange: [0, 1],
@@ -240,20 +292,24 @@ MapScreen = ({navigation}) => {
       <MapView
         style={styles.map}
         region={{
-          latitude: (origin.latitude + destination.latitude) / 2,
-          longitude: (origin.longitude + destination.longitude) / 2,
-          latitudeDelta: Delta(origin, destination) * DELTA_FACTOR,
-          longitudeDelta: Delta(origin, destination) * DELTA_FACTOR,
-        }}>
-        <Marker coordinate={origin} draggable>
-          <YourLocationView />
+          latitude: booking ? (booking.bookingStatus === 'progress' ? (booking.driverLocation.lat + destination.latitude) / 2 : (booking.driverLocation.lat + origin.latitude) / 2) : (origin.latitude + destination.latitude) / 2,
+          longitude: booking ? (booking.bookingStatus === 'progress' ? (booking.driverLocation.lng + destination.longitude) / 2 : (booking.driverLocation.lng + origin.longitude) / 2) : (origin.longitude + destination.longitude) / 2,
+          latitudeDelta: booking ? (booking.bookingStatus === 'progress' ? Delta(booking.driverLocation, destination) * DELTA_FACTOR: Delta(booking.driverLocation, origin) * DELTA_FACTOR) : Delta(origin, destination) * DELTA_FACTOR,
+          longitudeDelta: booking ? (booking.bookingStatus === 'progress' ? Delta(booking.driverLocation, destination) * DELTA_FACTOR: Delta(booking.driverLocation, origin) * DELTA_FACTOR) : Delta(origin, destination) * DELTA_FACTOR,
+        }}> 
+        <Marker coordinate={booking ? {latitude: booking.driverLocation.lat,
+          longitude: booking.driverLocation.lng}: origin} draggable>
+          {booking ? <CarIcon/> : <YourLocationView />}
         </Marker>
-        <Marker coordinate={destination} draggable>
-          <DestinationView />
+        <Marker coordinate={booking ? (booking.bookingStatus === 'progress' ? destination : origin) : destination} draggable>
+          {booking ? (booking.bookingStatus === 'progress' ? <DestinationView />: <YourLocationView />) : <DestinationView />}
         </Marker>
         <MapViewDirections
-          origin={origin}
-          destination={destination}
+          origin={booking ? {
+          latitude: booking.driverLocation.lat,
+          longitude: booking.driverLocation.lng,
+        } : origin}
+          destination={booking ?  (booking.bookingStatus === 'progress' ? destination : origin) : destination }
           apikey={GOOGLE_MAPS_APIKEY}
           strokeWidth={5}
           strokeColor="#0F5AF2"
@@ -303,6 +359,9 @@ MapScreen = ({navigation}) => {
                     <View className="ml-6">
                       <Text className="font-bold text-black text-base">
                         GoBike
+                        {origin.address.includes("Quận 5") || origin.address.includes("Quận 1,") || origin.address.includes("Quận 3") || destination.address.includes("Quận 5") || destination.address.includes("Quận 1,") || destination.address.includes("Quận 3") ? <Image 
+                        style={{width: 20, height: 20}}
+                        source={require('../../assets/images/funds.png')} />: null}
                       </Text>
                       <View className="flex flex-row ">
                         <Text className="text-gray-500">3 phút - </Text>
@@ -312,7 +371,7 @@ MapScreen = ({navigation}) => {
                     </View>
                   </View>
                   <Text className="font-bold text-black text-base">
-                    15000 VND
+                    15,000 VND
                   </Text>
                 </View>
               </TouchableOpacity>
@@ -332,17 +391,21 @@ MapScreen = ({navigation}) => {
                     />
                     <View className="ml-6">
                       <Text className="font-bold text-black text-base">
-                        GoCar
+                        GoCar 
+
+                        {origin.address.includes("Quận 5") || origin.address.includes("Quận 1,") || origin.address.includes("Quận 3") || destination.address.includes("Quận 5") || destination.address.includes("Quận 1,") || destination.address.includes("Quận 3") ? <Image 
+                        style={{width: 20, height: 20}}
+                        source={require('../../assets/images/funds.png')} />: null}
                       </Text>
                       <View className="flex flex-row ">
-                        <Text className="text-gray-500">3 phút - </Text>
+                        <Text className="text-gray-500">{travelTime} phút - </Text>
                         <MaterialIcons name="person" size={18} color="gray" />
                         <Text className="text-gray-500"> 4 chỗ</Text>
                       </View>
                     </View>
                   </View>
                   <Text className="font-bold text-black text-base">
-                    21000 VND
+                    {price.toLocaleString('en-US')} VND
                   </Text>
                 </View>
               </TouchableOpacity>
@@ -364,15 +427,19 @@ MapScreen = ({navigation}) => {
             <View className="bg-white h-6 w-6 rounded-full items-center justify-center">
               <MaterialIcons name="done" size={20} color="#16A34A" />
             </View>
-            <Text className="font-bold text-sm text-white ml-2">
-              Bạn sẽ đến nơi trong{' '}
-            </Text>
-            <View className="bg-green-500 rounded-xl ml-2 p-1">
+            
+              {booking.bookingStatus === 'accepted' ?<Text className="font-bold text-sm text-white ml-2">
+              Tài xế đang đến đón           
+              </Text> : <Text className="font-bold text-sm text-white ml-2">
+              Bạn sẽ đến nơi trong{' '}            
+              </Text>}
+
+              {booking.bookingStatus === 'progress' ? <View className="bg-green-500 rounded-xl ml-2 p-1">
               <Text className="font-bold text-sm text-white ">
                 {' '}
                 {travelTime} phút{' '}
               </Text>
-            </View>
+            </View>: null}
           </View>
           <View className="bg-white mt-3 h-full">
             <View style={styles.draggableArea} {...panResponder.panHandlers}>
@@ -383,7 +450,7 @@ MapScreen = ({navigation}) => {
                 <Image
                   style={{width: 56, height: 56}}
                   source={{uri: booking.userId.avatar.url}}
-                />
+                /> 
               </View>
               <View className="flex flex-col">
                 <Text className="font-bold text-black text-xl">
@@ -392,7 +459,7 @@ MapScreen = ({navigation}) => {
                 <View className="flex flex-row mt-2">
                   <MaterialIcons name="star" size={24} color="#FF8C00" />
                   <Text className="text-base text-gray-500">
-                    {booking.driverId.driverRating}
+                    {booking.driverId.driverRating.toFixed(2)}
                   </Text>
                 </View>
               </View>
@@ -402,7 +469,7 @@ MapScreen = ({navigation}) => {
                 <View className="flex flex-row justify-between items-center mb-2">
                   <Text className="text-lg font-bold">Tổng tiền</Text>
                   <Text className="text-green-600 text-right font-bold text-xl">
-                    {price}VND
+                    {price.toLocaleString('en-US')}VND
                   </Text>
                 </View>
                 <View className="flex flex-row justify-between items-center">
@@ -456,7 +523,8 @@ MapScreen = ({navigation}) => {
                   </TouchableOpacity>
                 </View>
               </View>
-              <TouchableOpacity className="flex items-center align-middle justify-center">
+              <TouchableOpacity className="flex items-center align-middle justify-center" 
+              onPress={() => cancelBooking(booking._id)}>
                 <Button className="mt-6 mb-1 p-1 rounded-lg bg-slate-400 w-3/5 h-14">
                   <Text className="text-white font-bold text-lg">
                     Hủy chuyến

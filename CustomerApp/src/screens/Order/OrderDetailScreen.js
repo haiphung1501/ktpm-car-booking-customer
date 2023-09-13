@@ -53,7 +53,7 @@ const OrderDetailScreen = ({route, navigation}) => {
           <Text className="text-lg font-bold">Tổng tiền</Text>
           <View>
             <Text className="text-green-700 text-right font-bold text-xl">
-              {order.price + (order.tipping || 0)}
+              {order.price.toLocaleString('en-US') + (order.tipping || 0)}
             </Text>
             <Text className="text-gray-400 text-right font-medium">
               Thanh toán bằng tiền mặt
@@ -62,7 +62,7 @@ const OrderDetailScreen = ({route, navigation}) => {
         </View>
         <View className="flex flex-row justify-between">
           <Text className="text-base text-gray-500 font-medium">Giá</Text>
-          <Text className="text-base font-bold">{order.price}</Text>
+          <Text className="text-base font-bold">{order.price.toLocaleString('en-US')}</Text>
         </View>
         <View className="flex flex-row justify-between">
           <Text className="text-base text-gray-500 font-medium">Tips</Text>
@@ -158,7 +158,7 @@ const OrderDetailScreen = ({route, navigation}) => {
 
       <CustomButton
         disabled={
-          order.isReviewed || !order.driverId || bookingStatus !== 'completed'
+          order.isReviewed || !order.driverId || order.bookingStatus !== 'completed'
         }
         onPress={() => navigation.navigate('Review', {orderId})}
         wrapperClass="mt-4 py-3 mb-6 rounded-lg bg-green-600 flex flex-row items-center justify-center"
